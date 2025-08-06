@@ -28,7 +28,7 @@ public class PlayVideo : MonoBehaviour
         videoPlayer = GetComponent<VideoPlayer>();
 
         if (videoClips.Count > 0)
-            videoPlayer.clip = videoClips[0];
+            videoPlayer.clip = videoClips[0]; // por defecto el primero
     }
 
     private void OnEnable()
@@ -56,12 +56,14 @@ public class PlayVideo : MonoBehaviour
     public void NextClip()
     {
         index = ++index % videoClips.Count;
+        videoPlayer.clip = videoClips[index];
         Play();
     }
 
     public void PreviousClip()
     {
-        index = --index % videoClips.Count;
+        index = (--index + videoClips.Count) % videoClips.Count;
+        videoPlayer.clip = videoClips[index];
         Play();
     }
 
@@ -70,6 +72,7 @@ public class PlayVideo : MonoBehaviour
         if (videoClips.Count > 0)
         {
             index = Random.Range(0, videoClips.Count);
+            videoPlayer.clip = videoClips[index];
             Play();
         }
     }
@@ -78,20 +81,25 @@ public class PlayVideo : MonoBehaviour
     {
         if (videoClips.Count > 0)
         {
-            index = Mathf.Clamp(value, 0, videoClips.Count);
+            index = Mathf.Clamp(value, 0, videoClips.Count - 1); // 🛠 índice válido
+            videoPlayer.clip = videoClips[index]; // 🛠 forzar cambio de clip
             Play();
         }
     }
 
     public void Play()
     {
-        videoMaterial.color = Color.white;
+        if (videoMaterial != null)
+            videoMaterial.color = Color.white;
+
         videoPlayer.Play();
     }
 
     public void Stop()
     {
-        videoMaterial.color = Color.black;
+        if (videoMaterial != null)
+            videoMaterial.color = Color.black;
+
         videoPlayer.Stop();
     }
 
@@ -123,12 +131,16 @@ public class PlayVideo : MonoBehaviour
 
     private void ApplyVideoMaterial(VideoPlayer source)
     {
-        meshRenderer.material = videoMaterial;
+        if (meshRenderer != null && videoMaterial != null)
+            meshRenderer.material = videoMaterial;
     }
 
     private void OnValidate()
     {
-        var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-        videoMaterial = mat;
+        if (videoMaterial == null)
+        {
+            var mat = new Material(Shader.Find("Universal Render Pipeline/Lit"));
+            videoMaterial = mat;
+        }
     }
 }

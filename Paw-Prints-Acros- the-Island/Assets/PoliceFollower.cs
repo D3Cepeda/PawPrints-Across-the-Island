@@ -7,6 +7,9 @@ public class PoliceFollower : MonoBehaviour
     private NavMeshAgent agent;
     private bool isFollowing = false;
 
+    [Header("Follow Settings")]
+    public float followDistance = 2.0f; // Distancia detrás del jugador
+
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
@@ -16,7 +19,11 @@ public class PoliceFollower : MonoBehaviour
     {
         if (isFollowing && target != null)
         {
-            agent.SetDestination(target.position);
+            // Calcula la posición detrás del jugador
+            Vector3 followPosition = target.position - target.forward * followDistance;
+            followPosition.y = agent.transform.position.y; // mantiene altura correcta
+
+            agent.SetDestination(followPosition);
         }
     }
 
