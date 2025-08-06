@@ -45,6 +45,7 @@ Material:
     - _Displacement_Amount: 1.74
     - _Displacement_Scale: 2.11
     - _NormalStrength: 0.19
+    - _QueueControl: 0
     - _Speed: -0.16
     - _Tiling: 0.02
     - _Transparency: 1
