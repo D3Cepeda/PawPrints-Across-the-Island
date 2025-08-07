@@ -27,7 +27,7 @@ public class scoreCounter : MonoBehaviour
 
         score += 1;
 
-        if(score == 4){
+        if(score == 3){
             keyObject.SetActive(true);
         }
 
